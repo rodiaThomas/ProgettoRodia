@@ -1,0 +1,27 @@
+{
+  "name": "progettorodia",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "start",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rodiaThomas/ProgettoRodia.git"
+  },
+  "author": "RodiaThomas",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rodiaThomas/ProgettoRodia/issues"
+  },
+  "homepage": "https://github.com/rodiaThomas/ProgettoRodia#readme",
+  "dependencies": {
+    "body-parser": "^2.2.0",
+    "express": "^5.1.0",
+    "http": "^0.0.1-security",
+    "mysql2": "^3.14.4",
+    "path": "^0.12.7"
+  }
+}
