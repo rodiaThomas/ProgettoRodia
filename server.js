@@ -23,7 +23,7 @@ app.get("/site/title",(req,res) => {
 
       res.json(results)
       
-  })
+  });
 
   app.get("/site/info",(req,res) => {
 
@@ -32,7 +32,34 @@ app.get("/site/title",(req,res) => {
 
       res.json(results)
       
-  })
+  });
+
+    app.get("/site/news",(req,res) => {
+
+    let results=serverDB.getNews()
+     
+
+      res.json(results)
+      
+  });
+
+  app.get("/site/carusel",(req,res) => {
+
+    let results=serverDB.getCarusel()
+     
+
+      res.json(results)
+      
+  });
+
+  app.get("/site/navbar",(req,res) => {
+
+    let results=serverDB.getNavbar()
+     
+
+      res.json(results)
+      
+  });
 
 
 

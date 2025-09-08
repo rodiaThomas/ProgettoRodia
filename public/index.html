@@ -4,9 +4,14 @@
 <head>
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-      type="text/css" />
 
+   <!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Bootstrap JS bundle (include Popper necessario per dropdown, tooltip ecc.) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  
 
 
 
@@ -19,16 +24,17 @@
 </head>
 
 <body >
-    <div id="container" class="container">
-
-
-      <div id="pagina1" class="page">
-        <div class="row" id="title">
-         
-       </div>
-       <div class="row">
+    <div  class="container-fluid">
+      
+         <div  id="title"></div>
+            
+        
          <div id="navbar"></div>
-       </div>
+       
+ <div id="container" class="container">
+      <div id="pagina1" class="page">
+        
+       
        <div class="row">
         <div class="col">
             <div id="info"></div>
@@ -37,17 +43,20 @@
             <div id="news"></div>
         </div>
        </div>
-       <div class="row">
-         <div id="carusel"></div>
-       </div>
+       
+        
+         <div id="carusel" style="width: 100%; margin: 0; padding: 0;"></div>
+       
       </div>
+</div>
+      <div id="endpage" ></div>
 
-      <div id="endpage"></div>
 
 
-<a href="assets/documentation/doc/indexDocum.html">link documentazione</a>
+
        
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
    <script type="module" src="./main.js"></script>
    
