@@ -5,7 +5,8 @@ export const createEndPage = (parentElement) => {
     render: () => {
       
           let html = `
-            <div style="background-color: black;  " class="row ">
+            <div style="background-color: black;" class="container-fluid">
+  <div class="row">
              <div class="row"></div>
                 <div class="col">
          <div class="row">
@@ -77,6 +78,7 @@ export const createEndPage = (parentElement) => {
            </div>
          </div>
          </div>
+            </div>
             </div>
           `;
 

@@ -53,15 +53,7 @@ export const createNavbar = (parentElement) => {
           `;
 
           parentElement.innerHTML = html;
-/*
-          // Event listener per creare pagine dinamiche al click
-          parentElement.querySelectorAll('a[data-page-id]').forEach(link => {
-            link.addEventListener('click', (e) => {
-              e.preventDefault();
-              const pageId = e.currentTarget.dataset.pageId;
-              createPage(pageId);
-            });
-          });*/
+
         })
         .catch(err => console.error("Errore fetch:", err));
     }

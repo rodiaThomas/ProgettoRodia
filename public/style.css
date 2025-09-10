@@ -6,4 +6,17 @@
     display: none !important;
  }
 
- 
+ html, body {
+  height: 100%;           /* serve per calcolare bene l'altezza */
+  margin: 0;              /* togli margini di default */
+  display: flex;
+  flex-direction: column; /* colonna verticale */
+}
+
+.container-fluid {
+  flex: 1;                /* prende tutto lo spazio disponibile */
+}
+
+#endpage {
+  margin-top: auto;       /* spinge il footer in fondo */
+}

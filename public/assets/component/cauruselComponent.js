@@ -1,53 +1,22 @@
-/*export const createCarusel = (parentElement) => {
-  return {
-    build: () => {},
-
-    render: () => {
-      fetch("/site/carusel")
-        .then(response => response.json())
-        .then(json => {
-          let html = `
-            <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
-            <div class="carousel-inner">`;
-            console.info(json.immages)
-            for(let i=0;i<json.immages.length;i++){
-                if(i===0){
-                    html+=`
-            <div class="carousel-item active">
-            <img src="../assets/immages/${json.immages[i]}" class="d-block w-50" alt="...">
-            </div>`;
-                }else{
-                      html+=`
-            <div class="carousel-item ">
-            <img src="../assets/immages/${json.immages[i]}" class="d-block w-50" alt="...">
-            </div>`;
-                }
-            }
-            html+=`
-        </div>
-        </div>
-          `;
-
-          parentElement.innerHTML = html;
-        })
-        .catch(err => console.error("Errore fetch:", err));
-    }
-  };
-};
-*/export const createCarusel = (parentElement) => {
+export const createCarusel = (parentElement) => {
   return {
     build: () => {},
     render: () => {
       fetch("/site/carusel")
         .then(r => r.json())
         .then(json => {
-          let imgs = Array.isArray(json.immages) ? json.immages.slice() : [];
+          const origImgs = Array.isArray(json.immages) ? json.immages.slice() : [];
 
-          const visible = 3; // quante immagini visibili
-          if (imgs.length === 0) {
+          if (origImgs.length === 0) {
             parentElement.innerHTML = "<p>Nessuna immagine disponibile</p>";
             return;
           }
+
+  
+          const visible = 3;
+
+          
+          let imgs = origImgs.slice();
           while (imgs.length < visible) {
             imgs = imgs.concat(imgs.slice(0, visible - imgs.length));
           }
@@ -71,25 +40,30 @@
             </div>
 
             <style>
+              /* wrapper full-viewport (esce dal container) */
               #${id} {
-                width: 100%;
+                width: 100vw;
+                margin-left: calc(50% - 50vw);
+                margin-right: calc(50% - 50vw);
                 overflow: hidden;
                 position: relative;
-                --visible: ${visible};
-                --gap: 16px; /* spazio tra immagini */
+                --gap: 16px; /* gap tra le slide, modificabile */
+                box-sizing: border-box;
+                user-select: none;
               }
 
               #${id} .cc-track {
                 display: flex;
+                gap: var(--gap);
+                padding: 0;
+                box-sizing: border-box;
+                align-items: center;
                 transition: transform 600ms ease;
                 will-change: transform;
-                gap: var(--gap);              /* spazio uniforme */
-                padding: 0 var(--gap);        /* compensazione ai bordi */
-                box-sizing: border-box;
               }
 
               #${id} .cc-slide {
-                flex: 0 0 calc((100% - (var(--gap) * (var(--visible) - 1))) / var(--visible));
+                flex: 0 0 auto; /* larghezza fissata via JS */
                 display: flex;
                 justify-content: center;
                 align-items: center;
@@ -98,33 +72,41 @@
 
               #${id} .cc-inner {
                 width: 100%;
-                border-radius: 12px;  /* curvatura bordi */
+                border-radius: 12px;
                 overflow: hidden;
-                background: #f5f5f5;  /* sfondo neutro */
+                background: #f5f5f5;
                 display: flex;
                 justify-content: center;
                 align-items: center;
+                aspect-ratio: 16 / 9; /* regola l'altezza; puoi cambiare */
               }
 
               #${id} img {
                 width: 100%;
-                height: auto;
-                object-fit: contain; /* adatta senza tagliare */
+                height: 100%;
+                object-fit: cover;
+                display: block;
               }
 
-              @media (max-width: 768px) {
-                #${id} { --visible: 1; }
+              /* mobile (opzionale): se vuoi 1 immagine su schermi piccoli, commenta/disattiva
+                 oppure gestiscilo lato JS per ricostruire con visible diverso */
+              @media (max-width: 520px) {
+                #${id} { --gap: 8px; }
               }
             </style>
           `;
 
           parentElement.innerHTML = html;
 
-          // --- logica autoplay ---
+          
           const wrapper = parentElement.querySelector(`#${id}`);
           const track = wrapper.querySelector(".cc-track");
 
+          
           const origSlides = Array.from(track.children);
+          const originalsCount = origSlides.length; 
+
+         
           const clonesBefore = [];
           const clonesAfter = [];
           for (let i = 0; i < visible; i++) {
@@ -136,39 +118,67 @@
           clonesBefore.forEach(n => track.insertBefore(n, track.firstChild));
           clonesAfter.forEach(n => track.appendChild(n));
 
-          const totalSlides = track.children.length;
-          const originalsCount = origSlides.length;
+          let currentIndex = visible; 
+          let slideAdvance = 0; 
+          const gapPx = parseFloat(getComputedStyle(track).gap) || 16;
 
-          let currentIndex = visible;
-          const getTranslatePct = (index) => (index * 100) / totalSlides;
+          
+          const computeSizes = () => {
+            const containerWidth = wrapper.clientWidth; 
+           
+            const available = containerWidth - gapPx * (visible - 1);
+            const slideWidth = available / visible;
+            Array.from(track.children).forEach(slide => {
+              slide.style.width = `${slideWidth}px`;
+            });
+            slideAdvance = slideWidth + gapPx;
+           
+            track.style.transition = "none";
+            track.style.transform = `translateX(-${currentIndex * slideAdvance}px)`;
+           
+            void track.offsetWidth;
+            track.style.transition = "transform 600ms ease";
+          };
 
-          track.style.transition = "none";
-          track.style.transform = `translateX(-${getTranslatePct(currentIndex)}%)`;
-          void track.offsetWidth;
-          track.style.transition = "transform 600ms ease";
+          
+          computeSizes();
 
+          
+          window.addEventListener("resize", () => {
+            computeSizes();
+          });
+
+          
+          track.style.transform = `translateX(-${currentIndex * slideAdvance}px)`;
+
+         
           const intervalMs = 2500;
-          setInterval(() => {
+          const timer = setInterval(() => {
             currentIndex++;
-            track.style.transform = `translateX(-${getTranslatePct(currentIndex)}%)`;
+            track.style.transform = `translateX(-${currentIndex * slideAdvance}px)`;
           }, intervalMs);
 
+         
           track.addEventListener("transitionend", () => {
+           
             if (currentIndex >= visible + originalsCount) {
               track.style.transition = "none";
               currentIndex = visible;
-              track.style.transform = `translateX(-${getTranslatePct(currentIndex)}%)`;
-              void track.offsetWidth;
+              track.style.transform = `translateX(-${currentIndex * slideAdvance}px)`;
+              void track.offsetWidth; 
               track.style.transition = "transform 600ms ease";
             }
+           
             if (currentIndex < visible) {
               track.style.transition = "none";
               currentIndex = visible + originalsCount - 1;
-              track.style.transform = `translateX(-${getTranslatePct(currentIndex)}%)`;
+              track.style.transform = `translateX(-${currentIndex * slideAdvance}px)`;
               void track.offsetWidth;
               track.style.transition = "transform 600ms ease";
             }
           });
+
+         
         })
         .catch(err => {
           console.error("Errore fetch:", err);

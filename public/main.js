@@ -5,6 +5,7 @@ import { createEndPage } from "./assets/component/endPageComponent.js";
 import { createCarusel } from "./assets/component/cauruselComponent.js";
 import { createNavbar } from "./assets/component/navbarComponet.js";
 import { createNews } from "./assets/component/newsComponent.js";
+import { createInformation } from "./assets/component/ComponentPageNews.js";
 const navigator = createNavigator(document.querySelector("#container"));
 
 let title = document.getElementById("title");
@@ -13,6 +14,7 @@ let info = document.getElementById("info");
 let news = document.getElementById("news");
 let carusel = document.getElementById("carusel");
 let endpage = document.getElementById("endpage");
+let information=document.getElementById("newsPage");
 
 let createtitle=createTitle(title);
 createtitle.build();
@@ -37,3 +39,7 @@ createnavbar.render();
 let createnews=createNews(news);
 createnews.build();
 createnews.render();
+
+let createpageNews=createInformation(information);
+createpageNews.build();
+createpageNews.render();
